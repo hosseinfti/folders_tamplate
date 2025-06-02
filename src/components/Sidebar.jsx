@@ -1,12 +1,11 @@
 import styles from "./Sidebar.module.css";
-import { initialTree } from './data';
 import TreeNode from "./TreeNode";
 
-export const Sidebar = () => {
+export const Sidebar = ({ tree, onSelect, selectedId }) => {
   return (
     <div className={styles.wrapper}>
-      {initialTree.map(node => (
-        <TreeNode key={node.id} node={node} />
+      {tree.map(node => (
+        <TreeNode key={node.id} node={node} onSelect={onSelect} selectedId={selectedId} />
       ))}
     </div>
   );

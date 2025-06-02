@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import arrowRight from "../assets/arrow-right.tsx";
 import arrowDown from "../assets/arrow-down.tsx";
 
-export default function TreeNode({ node }) {
+export default function TreeNode({ node, onSelect, selectedId }) {
   const [expanded, setExpanded] = useState(false);
   const isFolder = node.type === "folder";
 
@@ -14,9 +14,16 @@ export default function TreeNode({ node }) {
         style={{
           display: "flex",
           alignItems: "center",
-          cursor: isFolder ? "pointer" : "default",
+          cursor: "pointer",
+          fontWeight: selectedId === node.id ? "bold" : "normal",
+          background: selectedId === node.id ? "#333" : "transparent",
+          borderRadius: 4,
+          padding: "2px 4px",
         }}
-        onClick={isFolder ? toggle : undefined}
+        onClick={() => {
+          if (isFolder) toggle();
+          onSelect?.(node);
+        }}
       >
         {isFolder && (
           <img
@@ -26,6 +33,8 @@ export default function TreeNode({ node }) {
             style={{ marginRight: 4 }}
           />
         )}
+        {!isFolder && <span style={{ width: 16 }} />}{" "}
+        {/* spacing placeholder */}
         <span>{node.name}</span>
       </div>
 
@@ -37,7 +46,14 @@ export default function TreeNode({ node }) {
             (a, b) =>
               a.type.localeCompare(b.type) || a.name.localeCompare(b.name)
           )
-          .map((child) => <TreeNode key={child.id} node={child} />)}
+          .map((child) => (
+            <TreeNode
+              key={child.id}
+              node={child}
+              onSelect={onSelect}
+              selectedId={selectedId}
+            />
+          ))}
     </div>
   );
 }
