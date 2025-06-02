@@ -1,8 +1,9 @@
-import "./App.css";
-import Sidebar from "./components/Sidebar";
-import { Content } from "./components/Content";
+import React from 'react';
+import './App.css';
+import Sidebar from './components/Sidebar';
+import Content from './components/Content';
 
-function App() {
+export default function App() {
   return (
     <div className="wrapper">
       <Sidebar />
@@ -10,5 +11,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
