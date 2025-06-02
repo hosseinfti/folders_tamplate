@@ -1,8 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import './App.css';
 import Sidebar from './components/Sidebar';
 import Content from './components/Content';
 import { initialTree } from './data';
+
 function generateId() {
   return Math.random().toString(36).substring(2, 9);
 }
@@ -102,6 +103,26 @@ export default function App() {
   };
 
   const path = useMemo(() => getPath(selectedNode).join('/'), [selectedNode, tree]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.ctrlKey && e.key === 'n') {
+        e.preventDefault();
+        const input = prompt("Enter path (e.g. src/utils/helper.js)");
+        if (input) handleAdd(input);
+      } else if (e.key === 'Delete') {
+        if (selectedNode) handleDelete(selectedNode.id);
+      } else if (e.key === 'F2') {
+        if (selectedNode) {
+          const newName = prompt('Rename to:', selectedNode.name);
+          if (newName) handleRename(selectedNode.id, newName);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedNode]);
 
   return (
     <div className="wrapper">
