@@ -19,6 +19,7 @@ export default function TreeNode({
   return (
     <div style={{ paddingLeft: "1rem" }}>
       <div
+        data-id={node.id}
         style={{
           display: "flex",
           alignItems: "center",
