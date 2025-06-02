@@ -1,7 +1,7 @@
 import styles from "./Content.module.css";
 
-export const Content = () => {
-  return <div className={styles.wrapper}>Folder Path Here!</div>;
+export const Content = ({ path }) => {
+  return <div className={styles.wrapper}>{path || 'Nothing selected'}</div>;
 };
 
 export default Content;
