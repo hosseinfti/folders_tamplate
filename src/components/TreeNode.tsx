@@ -10,12 +10,25 @@ export default function TreeNode({
   selectedId,
   onRename,
   onDelete,
+  query,
 }) {
   const [expanded, setExpanded] = useState(false);
   const isFolder = node.type === "folder";
+  const lowerQuery = query?.toLowerCase();
+  const nameMatch = node?.name?.toLowerCase()?.includes(lowerQuery);
 
+  const searchedItem = (node.children || [])
+    .map((child) => ({ ...child }))
+    .filter((child) => {
+      return (
+        !query ||
+        child.name.toLowerCase().includes(lowerQuery) ||
+        (child.children &&
+          child.children.some((c) => c.name.toLowerCase().includes(lowerQuery)))
+      );
+    });
   const toggle = () => setExpanded((prev) => !prev);
-
+  if (query && !nameMatch && searchedItem.length === 0) return null;
   return (
     <div style={{ paddingLeft: "1rem" }}>
       <div
@@ -72,8 +85,8 @@ export default function TreeNode({
 
       {isFolder &&
         expanded &&
-        node.children?.length > 0 &&
-        [...node.children]
+        searchedItem.length > 0 &&
+        searchedItem
           .sort(
             (a, b) =>
               a.type.localeCompare(b.type) || a.name.localeCompare(b.name)
@@ -86,6 +99,7 @@ export default function TreeNode({
               selectedId={selectedId}
               onRename={onRename}
               onDelete={onDelete}
+              query={query}
             />
           ))}
     </div>

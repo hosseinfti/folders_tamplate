@@ -97,9 +97,15 @@ export default function App() {
     node: null,
   });
 
+  const [query, setQuery] = useState("");
+
   const handleAdd = (pathStr) => {
     setTree((prev) => addNodeByPath(prev, pathStr, selectedNode?.id));
     setSelectedNode(null);
+  };
+
+  const handleSearch = (e) => {
+    setQuery(e.target.value);
   };
 
   const handleRename = (id, newName) => {
@@ -183,32 +189,36 @@ export default function App() {
   }, [tree]);
 
   return (
-    <div className="wrapper">
-      <Sidebar
-        tree={tree}
-        onSelect={setSelectedNode}
-        selectedId={selectedNode?.id}
-        onAdd={handleAdd}
-        onRename={handleRename}
-        onDelete={handleDelete}
-      />
-      <Content path={path} />
-      <ContextMenu
-        {...context}
-        onAddFile={(node) => {
-          const fileName = prompt("Enter file name (e.g. helper.js)");
-          if (fileName) handleAdd(fileName);
-        }}
-        onAddFolder={(node) => {
-          const folderName = prompt("Enter folder name");
-          if (folderName) handleAdd(folderName);
-        }}
-        onRename={(node) => {
-          const newName = prompt("Rename to:", node.name);
-          if (newName) handleRename(node.id, newName);
-        }}
-        onDelete={(node) => handleDelete(node.id)}
-      />
-    </div>
+    <>
+      <input value={query} onChange={handleSearch} />
+      <div className="wrapper">
+        <Sidebar
+          tree={tree}
+          onSelect={setSelectedNode}
+          selectedId={selectedNode?.id}
+          onAdd={handleAdd}
+          onRename={handleRename}
+          onDelete={handleDelete}
+          query={query}
+        />
+        <Content path={path} />
+        <ContextMenu
+          {...context}
+          onAddFile={(node) => {
+            const fileName = prompt("Enter file name (e.g. helper.js)");
+            if (fileName) handleAdd(fileName);
+          }}
+          onAddFolder={(node) => {
+            const folderName = prompt("Enter folder name");
+            if (folderName) handleAdd(folderName);
+          }}
+          onRename={(node) => {
+            const newName = prompt("Rename to:", node.name);
+            if (newName) handleRename(node.id, newName);
+          }}
+          onDelete={(node) => handleDelete(node.id)}
+        />
+      </div>
+    </>
   );
 }
